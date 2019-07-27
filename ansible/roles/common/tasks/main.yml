@@ -1,0 +1,35 @@
+---
+- name: Ensure US locale exists
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+  async: 6400
+  poll: 5
+  
+- name: Update apt cache and upgrade
+  apt:
+    update_cache: yes
+    upgrade: yes
+  async: 6400
+  poll: 5
+
+- name: Ensure disk utilities are installed.
+  apt: 
+    name: "{{ packages }}"
+    state: installed
+    update_cache: yes
+  vars:
+    packages:
+      - rpcbind
+      - exfat-fuse
+      - ntfs-3g
+  async: 6400
+  poll: 5
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+    autoremove: yes
+  async: 6400
+  poll: 5
+  
